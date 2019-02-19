@@ -2,10 +2,7 @@ package com.rfc.ceres.user;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
 
 	@NotNull
@@ -26,12 +23,12 @@ public class User {
 	private String surname;
 
 	@NotNull
-	private String second_surname;
+	private String secondSurname;
 
 	@Email
 	@NotNull
 	private String email;
 
 	@NotNull
-	private String user_name;
+	private String userName;
 }

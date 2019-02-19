@@ -2,13 +2,9 @@ package com.rfc.ceres.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
-import java.util.TreeSet;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class UserController {
@@ -22,19 +18,27 @@ public class UserController {
 
 	@GetMapping("/users")
 	public ResponseEntity<?> findAllUsers() {
-		TreeSet<User> users = userService.findAll();
+		var users = userService.findAll();
 		return ResponseEntity.ok(users);
 	}
 
 	@GetMapping("/users/{id}")
 	public ResponseEntity<?> findUser(@PathVariable("id") Long id) {
-		Optional<User> user = userService.findById(id);
+		var user = userService.findById(id);
 		return ResponseEntity.ok(user);
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<?> createUser(User user) {
-		User savedUser = userService.create(user);
+	public ResponseEntity<?> createUser(User user, UriComponentsBuilder uriBuilder) {
+		var savedUser = userService.create(user);
+		var userId = savedUser.getId();
+		UriComponents uriComponents = uriBuilder.path("/users").buildAndExpand(userId);
+		return ResponseEntity.created(uriComponents.toUri()).build();
+	}
+
+	@PatchMapping("/users/{id}")
+	public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody() User user) {
+		var savedUser = userService.update(user, id);
 		return ResponseEntity.ok(savedUser);
 	}
 }
