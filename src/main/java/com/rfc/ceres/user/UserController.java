@@ -1,14 +1,15 @@
 package com.rfc.ceres.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RestController
+@Slf4j
+@RestController(value = "/users")
 public class UserController {
-
 	private final UserService userService;
 
 	@Autowired
@@ -16,19 +17,21 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("/users")
+	@GetMapping()
 	public ResponseEntity<?> findAllUsers() {
+		log.error("entrando");
 		var users = userService.findAll();
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/users/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> findUser(@PathVariable("id") Long id) {
+		log.error("entrando");
 		var user = userService.findById(id);
 		return ResponseEntity.ok(user);
 	}
 
-	@PostMapping("/users")
+	@PostMapping()
 	public ResponseEntity<?> createUser(User user, UriComponentsBuilder uriBuilder) {
 		var savedUser = userService.create(user);
 		var userId = savedUser.getId();
@@ -36,9 +39,15 @@ public class UserController {
 		return ResponseEntity.created(uriComponents.toUri()).build();
 	}
 
-	@PatchMapping("/users/{id}")
+	@PatchMapping("/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody() User user) {
 		var savedUser = userService.update(user, id);
 		return ResponseEntity.ok(savedUser);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+		userService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }
