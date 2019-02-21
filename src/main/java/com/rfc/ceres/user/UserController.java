@@ -1,15 +1,14 @@
 package com.rfc.ceres.user;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Slf4j
 @RestController(value = "/users")
 public class UserController {
+
 	private final UserService userService;
 
 	@Autowired
@@ -19,14 +18,12 @@ public class UserController {
 
 	@GetMapping()
 	public ResponseEntity<?> findAllUsers() {
-		log.error("entrando");
 		var users = userService.findAll();
 		return ResponseEntity.ok(users);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findUser(@PathVariable("id") Long id) {
-		log.error("entrando");
 		var user = userService.findById(id);
 		return ResponseEntity.ok(user);
 	}

@@ -11,12 +11,8 @@ import java.util.TreeSet;
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
-
 	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private UserRepository userRepository;
 
 	public TreeSet<User> findAll() {
 		Comparator<User> userComparator = Comparator.comparing(User::getName);
@@ -27,6 +23,10 @@ public class UserService {
 
 	public Optional<User> findById(Long id) {
 		return userRepository.findById(id);
+	}
+
+	public Optional<User> findByUserName(String username) {
+		return userRepository.findByUserName(username);
 	}
 
 	public User create(User user) {
