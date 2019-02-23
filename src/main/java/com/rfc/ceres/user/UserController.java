@@ -7,8 +7,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController(value = "/users")
+@RequestMapping(UserController.BASE_URL)
 public class UserController {
 
+	static final String BASE_URL = "/users";
 	private final UserService userService;
 
 	@Autowired
@@ -16,7 +18,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping()
+	@GetMapping("")
 	public ResponseEntity<?> findAllUsers() {
 		var users = userService.findAll();
 		return ResponseEntity.ok(users);
@@ -28,7 +30,7 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 
-	@PostMapping()
+	@PostMapping("")
 	public ResponseEntity<?> createUser(User user, UriComponentsBuilder uriBuilder) {
 		var savedUser = userService.create(user);
 		var userId = savedUser.getId();

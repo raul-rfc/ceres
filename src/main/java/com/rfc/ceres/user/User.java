@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity(name = "user_info")
-public class User {
+public class User implements Comparable<User> {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -34,4 +34,9 @@ public class User {
 
 	@NotNull
 	private String userName;
+
+	@Override
+	public int compareTo(User user) {
+		return this.name.compareTo(user.name);
+	}
 }

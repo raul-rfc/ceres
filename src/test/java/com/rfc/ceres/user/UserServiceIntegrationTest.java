@@ -20,9 +20,12 @@ public class UserServiceIntegrationTest {
 	@TestConfiguration
 	static class UserServiceTestContextConfiguration {
 
+		@Autowired
+		UserRepository repository;
+
 		@Bean
 		public UserService userService() {
-			return new UserService();
+			return new UserService(repository);
 		}
 	}
 

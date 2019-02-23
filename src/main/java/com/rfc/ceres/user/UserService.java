@@ -11,8 +11,12 @@ import java.util.TreeSet;
 @Service
 public class UserService {
 
-	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	public TreeSet<User> findAll() {
 		Comparator<User> userComparator = Comparator.comparing(User::getName);
