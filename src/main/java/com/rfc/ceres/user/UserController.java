@@ -18,7 +18,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("")
+	@GetMapping()
 	public ResponseEntity<?> findAllUsers() {
 		var users = userService.findAll();
 		return ResponseEntity.ok(users);
@@ -30,11 +30,11 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 
-	@PostMapping("")
+	@PostMapping()
 	public ResponseEntity<?> createUser(User user, UriComponentsBuilder uriBuilder) {
 		var savedUser = userService.create(user);
 		var userId = savedUser.getId();
-		UriComponents uriComponents = uriBuilder.path("/users").buildAndExpand(userId);
+		UriComponents uriComponents = uriBuilder.path("/users/{id}").buildAndExpand(userId);
 		return ResponseEntity.created(uriComponents.toUri()).build();
 	}
 
