@@ -1,20 +1,20 @@
-create table user_info
+CREATE TABLE user_info
 (
-  id serial not null constraint user_info_pk primary key,
-  name text not null,
-  second_name text,
-  surname text not null,
-  second_surname text not null,
-  email text not null,
-  user_name text not null
+	id             SERIAL NOT NULL CONSTRAINT user_info_pk PRIMARY KEY,
+	name           TEXT   NOT NULL,
+	second_name    TEXT,
+	surname        TEXT   NOT NULL,
+	second_surname TEXT   NOT NULL,
+	email          TEXT   NOT NULL,
+	user_name      TEXT   NOT NULL
 );
 
-create unique index user_info_email_uindex on user_info (email);
-create unique index user_info_user_name_uindex on user_info (user_name);
+CREATE UNIQUE INDEX user_info_email_uindex ON user_info (email);
+CREATE UNIQUE INDEX user_info_user_name_uindex ON user_info (user_name);
 
-create table item
+CREATE TABLE item
 (
-  id serial not null constraint item_pk primary key,
-  name  text   not null,
-  price money  not null
+	id    SERIAL NOT NULL CONSTRAINT item_pk PRIMARY KEY,
+	name  TEXT   NOT NULL,
+	price MONEY  NOT NULL
 );
