@@ -5,14 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@DisplayName("User Service Tests")
 class UserServiceTest {
 
 	@Mock
@@ -22,17 +22,25 @@ class UserServiceTest {
 	private UserService userService;
 
 	@BeforeEach
-	void setUp() {
-		User marvin = new User();
-		marvin.setUserName("Marvellous");
-		Mockito.when(userRepository.findByUserName(marvin.getUserName())).thenReturn(Optional.of(marvin));
+	void setUp(){
+		MockitoAnnotations.initMocks(this);
 	}
 
-	@DisplayName("Find by username")
+
 	@Test
+	@DisplayName("Find By Username")
 	void testFindByUsername() {
+		//Given
 		String username = "Marvellous";
+		User marvin = new User();
+		marvin.setUserName(username);
+		when(userRepository.findByUserName(marvin.getUserName())).thenReturn(Optional.of(marvin));
+
+		//When
 		Optional<User> foundUser = userService.findByUserName(username);
+
+		//Then
 		foundUser.ifPresent(user -> assertEquals("Marvellous", user.getUserName()));
+		verify(userRepository,times(1)).findByUserName(username);
 	}
 }
