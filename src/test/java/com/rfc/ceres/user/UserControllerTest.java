@@ -1,12 +1,13 @@
 package com.rfc.ceres.user;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -14,13 +15,15 @@ import java.util.TreeSet;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
-public class UserControllerIntegrationTest {
+
+//TODO this class should do the unit testing of the controller. It should be another UserIntegrationTest to test the integration with TestRestTemplate
+@ExtendWith(SpringExtension.class)
+@SpringBootTest()
+@AutoConfigureMockMvc
+class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -29,7 +32,7 @@ public class UserControllerIntegrationTest {
 	private UserService userService;
 
 	@Test
-	public void whenFindAll_returnAllUsers() throws Exception {
+	void whenFindAll_returnAllUsers() throws Exception {
 		User marvin = new User();
 		marvin.setName("Marvin");
 		marvin.setUserName("Marvellous");
@@ -45,7 +48,7 @@ public class UserControllerIntegrationTest {
 	}
 
 	@Test
-	public void whenFindById_returnUser() throws Exception {
+	void whenFindById_returnUser() throws Exception {
 		User marvin = new User();
 		marvin.setId(1L);
 		marvin.setName("Marvin");
@@ -61,12 +64,12 @@ public class UserControllerIntegrationTest {
 	}
 
 	@Test
-	public void whenCreateUser_returnLocation() throws Exception {
+	void whenCreateUser_returnLocation() throws Exception {
 		User marvin = new User();
 		marvin.setId(1L);
 		marvin.setUserName("Marvellous");
 
-		when(userService.create(any(User.class))).thenReturn(marvin);
+		given(userService.create(any(User.class))).willReturn(marvin);
 
 		mockMvc.perform(post("/users"))
 				.andExpect(status().isCreated())
@@ -74,12 +77,12 @@ public class UserControllerIntegrationTest {
 	}
 
 	@Test
-	public void whenUpdateUser_returnUpdatedUser() throws Exception {
+	void whenUpdateUser_returnUpdatedUser() throws Exception {
 		User marvin = new User();
 		marvin.setId(1L);
 		marvin.setUserName("Marvellous");
 
-		when(userService.update(any(User.class), 1L)).thenReturn(marvin);
+		given(userService.update(any(User.class), 1L)).willReturn(marvin);
 
 		mockMvc.perform(patch("/users/{id}", 1))
 				.andExpect(status().isOk())

@@ -1,19 +1,16 @@
 package com.rfc.ceres.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RestController(value = "/users")
-@RequestMapping(UserController.BASE_URL)
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
-	static final String BASE_URL = "/users";
 	private final UserService userService;
 
-	@Autowired
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
