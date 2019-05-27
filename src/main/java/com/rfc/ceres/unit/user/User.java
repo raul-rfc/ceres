@@ -1,6 +1,8 @@
-package com.rfc.ceres.user;
+package com.rfc.ceres.unit.user;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
+@DynamicUpdate
+@DynamicInsert
 @Entity(name = "user_info")
 public class User implements Comparable<User> {
 

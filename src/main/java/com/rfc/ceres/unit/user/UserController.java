@@ -1,5 +1,7 @@
-package com.rfc.ceres.user;
+package com.rfc.ceres.unit.user;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -16,8 +18,8 @@ public class UserController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<?> findAllUsers() {
-		var users = userService.findAll();
+	public ResponseEntity<?> findAllUsers(@PageableDefault() Pageable pageable) {
+		var users = userService.findAll(pageable);
 		return ResponseEntity.ok(users);
 	}
 
@@ -36,8 +38,9 @@ public class UserController {
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody() User user) {
-		var savedUser = userService.update(user, id);
+	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody() User user) {
+		user.setId(id);
+		var savedUser = userService.update(user);
 		return ResponseEntity.ok(savedUser);
 	}
 

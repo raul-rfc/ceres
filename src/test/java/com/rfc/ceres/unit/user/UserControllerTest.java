@@ -1,4 +1,4 @@
-package com.rfc.ceres.user;
+package com.rfc.ceres.unit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -8,11 +8,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -20,7 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-//TODO this class should do the unit testing of the controller. It should be another UserIntegrationTest to test the integration with TestRestTemplate
 @DisplayName("User Controller Tests")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -41,10 +44,12 @@ class UserControllerTest {
 		marvin.setName("Marvin");
 		marvin.setUserName("Marvellous");
 
-		TreeSet<User> allUsers = new TreeSet<>();
+		List<User> allUsers = new ArrayList<>();
 		allUsers.add(marvin);
 
-		given(userService.findAll()).willReturn(allUsers);
+		Page<User> page = new PageImpl<>(allUsers);
+
+		given(userService.findAll(null)).willReturn(page);
 
 		mockMvc.perform(get("/users"))
 				.andExpect(status().isOk())
@@ -86,11 +91,13 @@ class UserControllerTest {
 		marvin.setId(1L);
 		marvin.setUserName("Marvellous");
 
-		given(userService.update(any(User.class), 1L)).willReturn(marvin);
+		given(userService.update(any(User.class))).willReturn(marvin);
 
-		mockMvc.perform(patch("/users/{id}", 1))
+		mockMvc.perform(patch("/users/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(marvin)))
 				.andExpect(status().isOk())
-				.andExpect(header().string("Location",  "http://localhost/users/1"));
+				.andExpect(jsonPath("$.userName", Matchers.is("Marvellous")));
 	}
 
 }
