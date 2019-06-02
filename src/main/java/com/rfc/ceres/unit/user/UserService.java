@@ -1,14 +1,15 @@
 package com.rfc.ceres.unit.user;
 
 import com.rfc.ceres.common.MyBeanUtils;
+import com.rfc.ceres.common.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,8 +21,8 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public Page<User> findAll(Pageable pageable) {
-		return userRepository.findAll(pageable);
+	public PageResult<User> findAll(Pageable pageable) {
+		return new PageResult<>(userRepository.findAll(pageable));
 	}
 
 	public Optional<User> findById(Long id) {

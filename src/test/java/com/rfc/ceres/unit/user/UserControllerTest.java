@@ -1,6 +1,7 @@
 package com.rfc.ceres.unit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rfc.ceres.common.PageResult;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,11 +51,13 @@ class UserControllerTest {
 
 		Page<User> page = new PageImpl<>(allUsers);
 
-		given(userService.findAll(null)).willReturn(page);
+		PageResult<User> pageResult = new PageResult(page);
+
+		given(userService.findAll(PageRequest.of(0,5))).willReturn(pageResult);
 
 		mockMvc.perform(get("/users"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", Matchers.hasSize(allUsers.size())));
+				.andExpect(jsonPath("$.numberOfElements", Matchers.greaterThan(0)));
 	}
 
 	@Test

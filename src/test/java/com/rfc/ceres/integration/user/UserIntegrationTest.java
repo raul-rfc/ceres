@@ -1,6 +1,7 @@
 package com.rfc.ceres.integration.user;
 
 
+import com.rfc.ceres.common.PageResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +31,7 @@ class UserIntegrationTest {
 		final String baseUrl = "http://localhost:"+port+"/v1/users/";
 		URI uri = new URI(baseUrl);
 
-		ResponseEntity<TreeSet> result = template.getForEntity(uri, TreeSet.class);
+		ResponseEntity<?> result = template.getForEntity(uri, PageResult.class);
 
 		//Verify request succeed
 		assertEquals(200, result.getStatusCodeValue());

@@ -3,11 +3,13 @@ package com.rfc.ceres.common;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Component
 public class MyBeanUtils extends BeanUtils {
 
 	private static String[] getNullPropertyNames(Object source) {
