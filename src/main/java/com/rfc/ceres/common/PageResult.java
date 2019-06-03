@@ -1,6 +1,7 @@
 package com.rfc.ceres.common;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
@@ -9,10 +10,12 @@ import java.util.List;
 
 
 @Data
+@AllArgsConstructor
 public class PageResult<T> implements Serializable {
 
-	private PageInfo pageInfo;
 	private List<T> content;
+	private PageInfo pageInfo;
+
 
 	public PageResult(Page<T> page) {
 		this.content = page.getContent();

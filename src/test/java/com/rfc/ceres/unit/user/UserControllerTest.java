@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,26 +42,29 @@ class UserControllerTest {
 	@MockBean
 	private UserService userService;
 
+	@DisplayName("GET /users")
 	@Test
 	void whenFindAll_returnAllUsers() throws Exception {
 		User marvin = new User();
 		marvin.setName("Marvin");
-		marvin.setUserName("Marvellous");
 
 		List<User> allUsers = new ArrayList<>();
 		allUsers.add(marvin);
 
-		Page<User> page = new PageImpl<>(allUsers);
+		Pageable pageable = PageRequest.of(0, 5);
+		Page<User> page = new PageImpl<>(allUsers, pageable, 0);
+		PageResult<User> pageResult = new PageResult<>(page);
 
-		PageResult<User> pageResult = new PageResult(page);
+		given(userService.findAll(pageable)).willReturn(pageResult);
 
-		given(userService.findAll(PageRequest.of(0,5))).willReturn(pageResult);
-
-		mockMvc.perform(get("/users"))
+		mockMvc.perform(get("/users")
+				.param("page", "0")
+				.param("size", "5"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.numberOfElements", Matchers.greaterThan(0)));
+				.andExpect(jsonPath("$.content", hasSize(1)));
 	}
 
+	@DisplayName("GET /users/{id}")
 	@Test
 	void whenFindById_returnUser() throws Exception {
 		User marvin = new User();
@@ -76,6 +81,7 @@ class UserControllerTest {
 				.andExpect(jsonPath("$.userName", Matchers.is("Marvellous")));
 	}
 
+	@DisplayName("POST /users")
 	@Test
 	void whenCreateUser_returnLocation() throws Exception {
 		User marvin = new User();
@@ -89,6 +95,7 @@ class UserControllerTest {
 				.andExpect(header().string("Location",  "http://localhost/users/1"));
 	}
 
+	@DisplayName("PATCH /users/{id}")
 	@Test
 	void whenUpdateUser_returnUpdatedUser() throws Exception {
 		User marvin = new User();
